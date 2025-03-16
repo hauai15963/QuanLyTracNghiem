@@ -37,23 +37,37 @@ public class TopicsBUS {
     return topicsDAO.insertTopic(topic);
 }
 
-        public boolean updateTopic(TopicsDTO oldTopic, TopicsDTO newTopic) {
-    // Kiểm tra nếu không có thay đổi
-    if (oldTopic.equals(newTopic)) {
-        return false; // Không có gì thay đổi => Không cần cập nhật
+       public boolean updateTopic(TopicsDTO newTopic, TopicsDTO oldTopic) {
+    // 1️⃣ Kiểm tra nếu không có thay đổi
+    if (newTopic.equals(oldTopic)) {
+        return false; // Không có thay đổi, không cập nhật
     }
 
-    // Kiểm tra nếu tên chủ đề mới đã tồn tại và không phải của chính nó
-    if (!oldTopic.getTitle().equals(newTopic.getTitle()) && topicsDAO.isTopicExists(newTopic.getTitle())) {
-        return false; // Tên chủ đề đã tồn tại
+    // 2️⃣ Kiểm tra nếu tên mới bị trùng với một chủ đề khác
+    if (!newTopic.getTitle().equals(oldTopic.getTitle()) && topicsDAO.isTopicExists(newTopic.getTitle())) {
+        return false; // Tên đã tồn tại
     }
 
-    // Kiểm tra nếu ID chủ đề cha không tồn tại
+    // 3️⃣ Kiểm tra nếu ID chủ đề cha không tồn tại
     if (newTopic.getParentId() > 0 && !topicsDAO.isParentTopicExists(newTopic.getParentId())) {
         return false; // ID cha không hợp lệ
     }
 
     return topicsDAO.updateTopic(newTopic);
 }
+
+       public boolean hasChildTopics(int parentId) {
+    return topicsDAO.countChildTopics(parentId) > 0;
+}
+public boolean deleteTopics(int idTopic) {
+    if (hasChildTopics(idTopic)) {
+        return false; // Không thể xóa nếu còn topics con
+    }
+    return topicsDAO.deleteTopic(idTopic);
+}
+public List<TopicsDTO> searchTopics(String keyword) {
+    return topicsDAO.searchTopics(keyword);
+}
+
 
 }

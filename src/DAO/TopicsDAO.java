@@ -85,12 +85,14 @@ public class TopicsDAO {
 }
   
     
+    
+
     public boolean updateTopic(TopicsDTO topic) {
     String sql = "UPDATE topics SET tpTitle = ?, tpParent = ?, tpStatus = ? WHERE tpID = ?";
-    
+
     try (Connection conn = Connec.getConnection();
          PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        
         stmt.setString(1, topic.getTitle());
         stmt.setInt(2, topic.getParentId());
         stmt.setBoolean(3, topic.isStatus());
@@ -103,6 +105,64 @@ public class TopicsDAO {
     return false;
 }
 
+public int countChildTopics(int parentId) {
+    int count = 0;
+    String query = "SELECT COUNT(*) FROM topics WHERE tpParent = ?";
     
+    try (Connection conn = Connec.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        
+        stmt.setInt(1, parentId);
+        ResultSet rs = stmt.executeQuery();
+        
+        if (rs.next()) {
+            count = rs.getInt(1);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    
+    return count;
+}
+public boolean deleteTopic(int idTopic) {
+    String query = "DELETE FROM topics WHERE tpID = ?";
+    
+    try (Connection conn = Connec.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        
+        stmt.setInt(1, idTopic);
+        int rowsAffected = stmt.executeUpdate();
+        
+        return rowsAffected > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+public List<TopicsDTO> searchTopics(String keyword) {
+    List<TopicsDTO> topics = new ArrayList<>();
+    String query = "SELECT * FROM topics WHERE tpTitle LIKE ?";
+
+    try (Connection conn = Connec.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        
+        stmt.setString(1, "%" + keyword + "%"); // Tìm kiếm gần đúng
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            TopicsDTO topic = new TopicsDTO(
+                rs.getInt("tpID"),
+                rs.getString("tpTitle"),
+                rs.getInt("tpParent"),
+                rs.getBoolean("tpStatus")
+            );
+            topics.add(topic);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    
+    return topics;
+}
 
 }

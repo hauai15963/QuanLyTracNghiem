@@ -37,7 +37,7 @@ public class TopicsGUI extends javax.swing.JPanel {
             model.addRow(new Object[]{
                 topic.getId(),
                 topic.getTitle(),
-                parentTitle, // Hiển thị tên chủ đề cha thay vì ID
+                topic.getParentId(), // Giữ ID chủ đề cha (Ẩn)
                 topic.isStatus() ? "Hiển thị" : "Ẩn"
             });
         }
@@ -74,6 +74,29 @@ public class TopicsGUI extends javax.swing.JPanel {
             }
         });
     }
+    
+    private void searchTopics(String keyword) {
+    DefaultTableModel model = (DefaultTableModel) TableTopicsData.getModel();
+    model.setRowCount(0); // Xóa dữ liệu cũ
+
+    List<TopicsDTO> filteredTopics = topicsBUS.searchTopics(keyword);
+
+    java.util.Map<Integer, String> topicMap = new java.util.HashMap<>();
+    for (TopicsDTO topic : filteredTopics) {
+        topicMap.put(topic.getId(), topic.getTitle());
+    }
+
+    for (TopicsDTO topic : filteredTopics) {
+        String parentTitle = topicMap.getOrDefault(topic.getParentId(), "Không có");
+
+        model.addRow(new Object[]{
+            topic.getId(),
+            topic.getTitle(),
+            parentTitle, // Hiển thị tên chủ đề cha thay vì ID
+            topic.isStatus() ? "Hiển thị" : "Ẩn"
+        });
+    }
+}
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -96,14 +119,14 @@ public class TopicsGUI extends javax.swing.JPanel {
         btnClear = new javax.swing.JButton();
         btnAdd = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
         txtSearch = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        btnSearch = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         TableTopicsData = new javax.swing.JTable();
 
@@ -172,6 +195,11 @@ public class TopicsGUI extends javax.swing.JPanel {
         jPanel10.add(jLabel3, gridBagConstraints);
 
         txtidTopicscha.setMaximumSize(new java.awt.Dimension(2147483647, 30));
+        txtidTopicscha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtidTopicschaActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -326,14 +354,14 @@ public class TopicsGUI extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(15, 15, 15, 15);
         jPanel6.add(btnUpdate, gridBagConstraints);
 
-        jButton5.setBackground(new java.awt.Color(255, 68, 93));
-        jButton5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton5.setForeground(new java.awt.Color(245, 245, 245));
-        jButton5.setText("Xóa");
-        jButton5.setPreferredSize(new java.awt.Dimension(75, 30));
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        btnDelete.setBackground(new java.awt.Color(255, 68, 93));
+        btnDelete.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnDelete.setForeground(new java.awt.Color(245, 245, 245));
+        btnDelete.setText("Xóa");
+        btnDelete.setPreferredSize(new java.awt.Dimension(75, 30));
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                btnDeleteActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -346,7 +374,7 @@ public class TopicsGUI extends javax.swing.JPanel {
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.weighty = 0.25;
         gridBagConstraints.insets = new java.awt.Insets(15, 15, 15, 15);
-        jPanel6.add(jButton5, gridBagConstraints);
+        jPanel6.add(btnDelete, gridBagConstraints);
 
         jButton6.setBackground(new java.awt.Color(106, 50, 159));
         jButton6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -419,9 +447,14 @@ public class TopicsGUI extends javax.swing.JPanel {
             }
         });
 
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton1.setText("Tìm Kiếm");
-        jButton1.setPreferredSize(new java.awt.Dimension(75, 30));
+        btnSearch.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnSearch.setText("Tìm Kiếm");
+        btnSearch.setPreferredSize(new java.awt.Dimension(75, 30));
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -431,7 +464,7 @@ public class TopicsGUI extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(295, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
@@ -440,7 +473,7 @@ public class TopicsGUI extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(7, Short.MAX_VALUE))
         );
 
@@ -508,12 +541,40 @@ public class TopicsGUI extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchActionPerformed
-        // TODO add your handling code here:
+        String keyword = txtSearch.getText().trim();
+        searchTopics(keyword);
     }//GEN-LAST:event_txtSearchActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        int selectedRow = TableTopicsData.getSelectedRow();
+    if (selectedRow < 0) {
+        JOptionPane.showMessageDialog(this, "Vui lòng chọn chủ đề để xóa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Lấy ID chủ đề cần xóa
+    int idTopic = Integer.parseInt(TableTopicsData.getValueAt(selectedRow, 0).toString());
+
+    // Kiểm tra xem có topics con không
+    if (topicsBUS.hasChildTopics(idTopic)) {
+        JOptionPane.showMessageDialog(this, "Không thể xóa! Vui lòng xóa tất cả chủ đề con trước.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Xác nhận trước khi xóa
+    int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa chủ đề này?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+    if (confirm != JOptionPane.YES_OPTION) {
+        return;
+    }
+
+    // Thực hiện xóa
+    if (topicsBUS.deleteTopics(idTopic)) {
+        JOptionPane.showMessageDialog(this, "Xóa chủ đề thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+        loadTableData(); // Cập nhật lại bảng sau khi xóa
+    } else {
+        JOptionPane.showMessageDialog(this, "Không thể xóa chủ đề!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void txtTenTopicsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTenTopicsActionPerformed
         // TODO add your handling code here:
@@ -565,17 +626,70 @@ public class TopicsGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-       
+        int selectedRow = TableTopicsData.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn chủ đề để cập nhật!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Lấy thông tin cũ từ bảng
+        int idTopic = Integer.parseInt(TableTopicsData.getValueAt(selectedRow, 0).toString());
+        String oldTitle = TableTopicsData.getValueAt(selectedRow, 1).toString();
+        int oldParentId = Integer.parseInt(TableTopicsData.getValueAt(selectedRow, 2).toString());
+        boolean oldStatus = TableTopicsData.getValueAt(selectedRow, 3).toString().equals("Hiển thị");
+
+        // Lấy thông tin mới từ giao diện
+        String newTitle = txtTenTopics.getText().trim();
+        String idTopicChaText = txtidTopicscha.getText().trim();
+        boolean newStatus = jRadioButtonHoatDong.isSelected();
+
+        // Kiểm tra nếu không nhập tên mới
+        if (newTitle.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên chủ đề!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Kiểm tra ID chủ đề cha hợp lệ
+        int newParentId = 0;
+        try {
+            if (!idTopicChaText.equals("Không có")) {
+                newParentId = Integer.parseInt(idTopicChaText);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "ID chủ đề cha không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Tạo đối tượng DTO cũ và mới
+        TopicsDTO oldTopic = new TopicsDTO(idTopic, oldTitle, oldParentId, oldStatus);
+        TopicsDTO newTopic = new TopicsDTO(idTopic, newTitle, newParentId, newStatus);
+
+        // Gọi BUS để xử lý cập nhật
+        if (topicsBUS.updateTopic(newTopic, oldTopic)) {
+            JOptionPane.showMessageDialog(this, "Cập nhật chủ đề thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+            loadTableData(); // Cập nhật lại bảng
+        } else {
+            JOptionPane.showMessageDialog(this, "Không thể cập nhật! Kiểm tra điều kiện hợp lệ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void txtidTopicschaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtidTopicschaActionPerformed
+        
+    }//GEN-LAST:event_txtidTopicschaActionPerformed
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        String keyword = txtSearch.getText().trim();
+        searchTopics(keyword);
+    }//GEN-LAST:event_btnSearchActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable TableTopicsData;
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnClear;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnUpdate;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel3;
