@@ -74,29 +74,29 @@ public class TopicsGUI extends javax.swing.JPanel {
             }
         });
     }
-    
+
     private void searchTopics(String keyword) {
-    DefaultTableModel model = (DefaultTableModel) TableTopicsData.getModel();
-    model.setRowCount(0); // Xóa dữ liệu cũ
+        DefaultTableModel model = (DefaultTableModel) TableTopicsData.getModel();
+        model.setRowCount(0); // Xóa dữ liệu cũ
 
-    List<TopicsDTO> filteredTopics = topicsBUS.searchTopics(keyword);
+        List<TopicsDTO> filteredTopics = topicsBUS.searchTopics(keyword);
 
-    java.util.Map<Integer, String> topicMap = new java.util.HashMap<>();
-    for (TopicsDTO topic : filteredTopics) {
-        topicMap.put(topic.getId(), topic.getTitle());
+        java.util.Map<Integer, String> topicMap = new java.util.HashMap<>();
+        for (TopicsDTO topic : filteredTopics) {
+            topicMap.put(topic.getId(), topic.getTitle());
+        }
+
+        for (TopicsDTO topic : filteredTopics) {
+            String parentTitle = topicMap.getOrDefault(topic.getParentId(), "Không có");
+
+            model.addRow(new Object[]{
+                topic.getId(),
+                topic.getTitle(),
+                parentTitle, // Hiển thị tên chủ đề cha thay vì ID
+                topic.isStatus() ? "Hiển thị" : "Ẩn"
+            });
+        }
     }
-
-    for (TopicsDTO topic : filteredTopics) {
-        String parentTitle = topicMap.getOrDefault(topic.getParentId(), "Không có");
-
-        model.addRow(new Object[]{
-            topic.getId(),
-            topic.getTitle(),
-            parentTitle, // Hiển thị tên chủ đề cha thay vì ID
-            topic.isStatus() ? "Hiển thị" : "Ẩn"
-        });
-    }
-}
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -164,6 +164,7 @@ public class TopicsGUI extends javax.swing.JPanel {
         jPanel10.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(51, 51, 51), new java.awt.Color(0, 0, 0), null, null));
         jPanel10.setLayout(new java.awt.GridBagLayout());
 
+        txtTenTopics.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtTenTopics.setMaximumSize(new java.awt.Dimension(2147483647, 30));
         txtTenTopics.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -194,6 +195,7 @@ public class TopicsGUI extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 20, 5, 20);
         jPanel10.add(jLabel3, gridBagConstraints);
 
+        txtidTopicscha.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtidTopicscha.setMaximumSize(new java.awt.Dimension(2147483647, 30));
         txtidTopicscha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -229,6 +231,8 @@ public class TopicsGUI extends javax.swing.JPanel {
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(10, 20, 5, 20);
         jPanel10.add(jLabel6, gridBagConstraints);
+
+        jRadioButtonHoatDong.setBackground(new java.awt.Color(245, 245, 245));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -490,6 +494,8 @@ public class TopicsGUI extends javax.swing.JPanel {
         if (TableTopicsData.getColumnModel().getColumnCount() > 0) {
             TableTopicsData.getColumnModel().getColumn(0).setMinWidth(100);
             TableTopicsData.getColumnModel().getColumn(0).setMaxWidth(100);
+            TableTopicsData.getColumnModel().getColumn(2).setMinWidth(200);
+            TableTopicsData.getColumnModel().getColumn(2).setMaxWidth(200);
             TableTopicsData.getColumnModel().getColumn(3).setMinWidth(100);
             TableTopicsData.getColumnModel().getColumn(3).setMaxWidth(100);
         }
@@ -547,33 +553,33 @@ public class TopicsGUI extends javax.swing.JPanel {
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         int selectedRow = TableTopicsData.getSelectedRow();
-    if (selectedRow < 0) {
-        JOptionPane.showMessageDialog(this, "Vui lòng chọn chủ đề để xóa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn chủ đề để xóa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-    // Lấy ID chủ đề cần xóa
-    int idTopic = Integer.parseInt(TableTopicsData.getValueAt(selectedRow, 0).toString());
+        // Lấy ID chủ đề cần xóa
+        int idTopic = Integer.parseInt(TableTopicsData.getValueAt(selectedRow, 0).toString());
 
-    // Kiểm tra xem có topics con không
-    if (topicsBUS.hasChildTopics(idTopic)) {
-        JOptionPane.showMessageDialog(this, "Không thể xóa! Vui lòng xóa tất cả chủ đề con trước.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
+        // Kiểm tra xem có topics con không
+        if (topicsBUS.hasChildTopics(idTopic)) {
+            JOptionPane.showMessageDialog(this, "Không thể xóa! Vui lòng xóa tất cả chủ đề con trước.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-    // Xác nhận trước khi xóa
-    int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa chủ đề này?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
-    if (confirm != JOptionPane.YES_OPTION) {
-        return;
-    }
+        // Xác nhận trước khi xóa
+        int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa chủ đề này?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
 
-    // Thực hiện xóa
-    if (topicsBUS.deleteTopics(idTopic)) {
-        JOptionPane.showMessageDialog(this, "Xóa chủ đề thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-        loadTableData(); // Cập nhật lại bảng sau khi xóa
-    } else {
-        JOptionPane.showMessageDialog(this, "Không thể xóa chủ đề!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-    }
+        // Thực hiện xóa
+        if (topicsBUS.deleteTopics(idTopic)) {
+            JOptionPane.showMessageDialog(this, "Xóa chủ đề thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+            loadTableData(); // Cập nhật lại bảng sau khi xóa
+        } else {
+            JOptionPane.showMessageDialog(this, "Không thể xóa chủ đề!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void txtTenTopicsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTenTopicsActionPerformed
@@ -674,7 +680,7 @@ public class TopicsGUI extends javax.swing.JPanel {
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void txtidTopicschaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtidTopicschaActionPerformed
-        
+
     }//GEN-LAST:event_txtidTopicschaActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed

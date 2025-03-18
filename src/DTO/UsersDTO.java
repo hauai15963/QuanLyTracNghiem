@@ -1,25 +1,73 @@
 package DTO;
 
 public class UsersDTO {
+    private int userID;
     private String userName;
-    private String password;
+    private String userEmail;
+    private String userPassword;
+    private String userFullName;
     private boolean isAdmin;
 
-    public UsersDTO(String userName, String password, boolean isAdmin) {
+    // Constructor mặc định
+    public UsersDTO() {
+    }
+
+    // Constructor có tham số
+    public UsersDTO(int userID, String userName, String userEmail, String userPassword, String userFullName, boolean isAdmin) {
+        this.userID = userID;
         this.userName = userName;
-        this.password = password;
+        this.userEmail = userEmail;
+        this.userPassword = userPassword;
+        this.userFullName = userFullName;
         this.isAdmin = isAdmin;
+    }
+
+    // Getter và Setter
+    public int getUserID() {
+        return userID;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
     public String getUserName() {
         return userName;
     }
 
-    public String getPassword() {
-        return password;
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getUserPassword() {
+        return userPassword;
+    }
+
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
+    }
+
+    public String getUserFullName() {
+        return userFullName;
+    }
+
+    public void setUserFullName(String userFullName) {
+        this.userFullName = userFullName;
     }
 
     public boolean isAdmin() {
         return isAdmin;
+    }
+
+    public void setAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 }

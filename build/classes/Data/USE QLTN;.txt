@@ -1,0 +1,108 @@
+USE QLTN;
+GO
+
+-- Table structure for table 'topics'
+-- Lưu trữ thông tin chủ đề
+CREATE TABLE topics (
+  tpID INT IDENTITY(1,1) PRIMARY KEY, -- ID chủ đề
+  tpTitle NVARCHAR(MAX) NOT NULL, -- Tên chủ đề
+  tpParent INT NOT NULL, -- ID chủ đề cha 
+  tpStatus BIT NOT NULL -- 1: Hiển thị, 0: Ẩn
+);
+GO
+
+-- Table structure for table 'questions'
+-- Lưu trữ thông tin câu hỏi
+CREATE TABLE questions (
+  qID INT IDENTITY(1,1) PRIMARY KEY, -- ID câu hỏi
+  qContent NVARCHAR(MAX) NOT NULL, -- Nội dung câu hỏi
+  qPictures NVARCHAR(MAX) NOT NULL, -- URL hình ảnh minh họa
+  qTopicID INT NOT NULL, -- ID chủ đề câu hỏi
+  qLevel VARCHAR(10) NOT NULL, -- Mức độ khó (easy, medium, diff)
+  qStatus BIT NOT NULL, -- 1: Hiển thị, 0: Ẩn
+  CONSTRAINT FK_questions_topics FOREIGN KEY (qTopicID) REFERENCES topics(tpID)
+);
+GO
+
+-- Table structure for table 'answers'
+-- Lưu trữ các đáp án của câu hỏi
+CREATE TABLE answers (
+  awID INT IDENTITY(1,1) PRIMARY KEY, -- ID đáp án
+  qID INT NOT NULL, -- ID câu hỏi liên kết
+  awContent NVARCHAR(MAX) NOT NULL, -- Nội dung đáp án
+  awPictures NVARCHAR(MAX) NOT NULL, -- URL hình ảnh minh họa
+  isRight BIT NOT NULL, -- 1: Đáp án đúng, 0: Đáp án sai
+  awStatus BIT NOT NULL, -- 1: Hiển thị, 0: Ẩn
+  CONSTRAINT FK_answers_questions FOREIGN KEY (qID) REFERENCES questions(qID)
+);
+GO
+
+-- Table structure for table 'test'
+-- Lưu trữ thông tin bài kiểm tra
+CREATE TABLE test (
+  testID INT IDENTITY(1,1) PRIMARY KEY, -- ID bài kiểm tra
+  testCode VARCHAR(20) NOT NULL, -- Mã bài kiểm tra
+  testTilte NVARCHAR(MAX) NOT NULL, -- Tiêu đề bài kiểm tra
+  testTime INT NOT NULL, -- Thời gian làm bài (phút)
+  tpID INT NOT NULL, -- ID chủ đề bài học
+  num_easy INT NOT NULL, -- Số câu dễ
+  num_medium INT NOT NULL, -- Số câu trung bình
+  num_diff INT NOT NULL, -- Số câu khó
+  testLimit INT NOT NULL, -- Giới hạn số lần thi
+  testDate DATE NOT NULL, -- Ngày tổ chức thi
+  testStatus INT NOT NULL, -- Trạng thái bài thi
+  CONSTRAINT FK_test_topics FOREIGN KEY (tpID) REFERENCES topics(tpID)
+);
+GO
+
+-- Table structure for table 'exams'
+-- Lưu trữ thông tin bài thi
+CREATE TABLE exams (
+  testCode VARCHAR(20) NOT NULL, -- Mã bài thi
+  exOrder CHAR(1) NOT NULL, -- Thứ tự đề (A, B, C, D, E, F)
+  exCode VARCHAR(20) NOT NULL, -- Mã đề thi (testCode + exOrder)
+  ex_quesIDs NVARCHAR(MAX) NOT NULL, -- Danh sách ID câu hỏi
+  PRIMARY KEY (testCode, exOrder)
+);
+GO
+
+-- Table structure for table 'users'
+-- Lưu trữ thông tin người dùng
+CREATE TABLE users (
+  userID INT IDENTITY(1,1) PRIMARY KEY, -- ID người dùng
+  userName VARCHAR(40) NOT NULL, -- Tên đăng nhập
+  userEmail VARCHAR(50) NOT NULL, -- Email người dùng
+  userPassword VARCHAR(40) NOT NULL, -- Mật khẩu (được mã hóa)
+  userFullName VARCHAR(40) NOT NULL, -- Họ và tên đầy đủ
+  isAdmin BIT NOT NULL -- 1: Quản trị viên, 0: Người dùng thường
+);
+GO
+
+-- Table structure for table 'result'
+-- Lưu trữ kết quả bài thi của người dùng
+CREATE TABLE result (
+  rs_num INT IDENTITY(1,1) PRIMARY KEY, -- ID kết quả
+  userID INT NOT NULL, -- ID người dùng
+  exCode VARCHAR(20) NOT NULL, -- Mã đề thi
+  rs_anwsers NVARCHAR(MAX) NOT NULL, -- Danh sách đáp án đã chọn
+  rs_mark DECIMAL(10,0) NOT NULL, -- Điểm số đạt được
+  rs_date DATETIME NOT NULL, -- Ngày thi
+  CONSTRAINT FK_result_users FOREIGN KEY (userID) REFERENCES users(userID)
+);
+GO
+
+
+-- Table structure for table 'logs'
+-- Ghi lại lịch sử hoạt động của người dùng
+CREATE TABLE logs (
+  logID INT IDENTITY(1,1) PRIMARY KEY, -- ID bản ghi log
+  logContent NVARCHAR(MAX) NOT NULL, -- Nội dung log
+  logUserID INT NOT NULL, -- ID người dùng
+  logExCode VARCHAR(20) NOT NULL, -- Mã đề thi liên quan
+  logDate DATETIME NOT NULL, -- Ngày giờ thực hiện
+  CONSTRAINT FK_logs_users FOREIGN KEY (logUserID) REFERENCES users(userID)
+);
+GO
+
+
+

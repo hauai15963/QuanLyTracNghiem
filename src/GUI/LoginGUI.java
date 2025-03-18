@@ -18,12 +18,7 @@ public class LoginGUI extends javax.swing.JFrame {
     private UsersBUS userBUS = new UsersBUS();
     public LoginGUI() {
         initComponents();
-        btnLogin.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                btnLoginActionPerformed(e);
-            }
-        });
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -118,6 +113,8 @@ public class LoginGUI extends javax.swing.JFrame {
         jLabel6.setForeground(new java.awt.Color(4, 51, 69));
         jLabel6.setText("Mật khẩu");
 
+        txtUsername.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
         btnLogin.setBackground(new java.awt.Color(4, 51, 69));
         btnLogin.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btnLogin.setForeground(new java.awt.Color(245, 245, 245));
@@ -139,6 +136,8 @@ public class LoginGUI extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
+
+        txtPassword.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -232,18 +231,17 @@ public class LoginGUI extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         String username = txtUsername.getText();
-        String password = new String(txtPassword.getPassword());
-        UsersDTO user = userBUS.login(username, password);
-        if (user != null) {
-            if (user.isAdmin()) {
-                new IndexGUI().setVisible(true);
-                dispose();
-            } else {
-                JOptionPane.showMessageDialog(null, "Bạn không có quyền truy cập!");
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Sai tài khoản hoặc mật khẩu!");
-        }
+    String password = new String(txtPassword.getPassword());
+
+    UsersDTO user = userBUS.login(username, password);
+
+    if (user != null) {
+        JOptionPane.showMessageDialog(this, "Đăng nhập thành công!");
+        new IndexGUI(user).setVisible(true); // Truyền user vào
+        this.dispose();
+    } else {
+        JOptionPane.showMessageDialog(this, "Sai tài khoản hoặc mật khẩu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_btnLoginActionPerformed
  
     public static void main(String args[]) {

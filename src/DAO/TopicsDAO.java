@@ -65,104 +65,98 @@ public class TopicsDAO {
         }
         return false;
     }
-    
+
     public boolean isParentTopicExists(int parentId) {
-    String sql = "SELECT COUNT(*) FROM topics WHERE tpID = ?";
-    
-    try (Connection conn = Connec.getConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql)) {
-        
-        stmt.setInt(1, parentId);
-        ResultSet rs = stmt.executeQuery();
-        
-        if (rs.next()) {
-            return rs.getInt(1) > 0; // Trả về true nếu tìm thấy ID cha
+        String sql = "SELECT COUNT(*) FROM topics WHERE tpID = ?";
+
+        try (Connection conn = Connec.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, parentId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Trả về true nếu tìm thấy ID cha
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi kiểm tra ID chủ đề cha: " + e.getMessage());
         }
-    } catch (SQLException e) {
-        System.err.println("Lỗi kiểm tra ID chủ đề cha: " + e.getMessage());
-    }
-    return false;
-}
-  
-    
-    
-
-    public boolean updateTopic(TopicsDTO topic) {
-    String sql = "UPDATE topics SET tpTitle = ?, tpParent = ?, tpStatus = ? WHERE tpID = ?";
-
-    try (Connection conn = Connec.getConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql)) {
-        
-        stmt.setString(1, topic.getTitle());
-        stmt.setInt(2, topic.getParentId());
-        stmt.setBoolean(3, topic.isStatus());
-        stmt.setInt(4, topic.getId());
-
-        return stmt.executeUpdate() > 0; // Trả về true nếu cập nhật thành công
-    } catch (SQLException e) {
-        System.err.println("Lỗi cập nhật chủ đề: " + e.getMessage());
-    }
-    return false;
-}
-
-public int countChildTopics(int parentId) {
-    int count = 0;
-    String query = "SELECT COUNT(*) FROM topics WHERE tpParent = ?";
-    
-    try (Connection conn = Connec.getConnection();
-         PreparedStatement stmt = conn.prepareStatement(query)) {
-        
-        stmt.setInt(1, parentId);
-        ResultSet rs = stmt.executeQuery();
-        
-        if (rs.next()) {
-            count = rs.getInt(1);
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    
-    return count;
-}
-public boolean deleteTopic(int idTopic) {
-    String query = "DELETE FROM topics WHERE tpID = ?";
-    
-    try (Connection conn = Connec.getConnection();
-         PreparedStatement stmt = conn.prepareStatement(query)) {
-        
-        stmt.setInt(1, idTopic);
-        int rowsAffected = stmt.executeUpdate();
-        
-        return rowsAffected > 0;
-    } catch (SQLException e) {
-        e.printStackTrace();
         return false;
     }
-}
-public List<TopicsDTO> searchTopics(String keyword) {
-    List<TopicsDTO> topics = new ArrayList<>();
-    String query = "SELECT * FROM topics WHERE tpTitle LIKE ?";
 
-    try (Connection conn = Connec.getConnection();
-         PreparedStatement stmt = conn.prepareStatement(query)) {
-        
-        stmt.setString(1, "%" + keyword + "%"); // Tìm kiếm gần đúng
-        ResultSet rs = stmt.executeQuery();
+    public boolean updateTopic(TopicsDTO topic) {
+        String sql = "UPDATE topics SET tpTitle = ?, tpParent = ?, tpStatus = ? WHERE tpID = ?";
 
-        while (rs.next()) {
-            TopicsDTO topic = new TopicsDTO(
-                rs.getInt("tpID"),
-                rs.getString("tpTitle"),
-                rs.getInt("tpParent"),
-                rs.getBoolean("tpStatus")
-            );
-            topics.add(topic);
+        try (Connection conn = Connec.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, topic.getTitle());
+            stmt.setInt(2, topic.getParentId());
+            stmt.setBoolean(3, topic.isStatus());
+            stmt.setInt(4, topic.getId());
+
+            return stmt.executeUpdate() > 0; // Trả về true nếu cập nhật thành công
+        } catch (SQLException e) {
+            System.err.println("Lỗi cập nhật chủ đề: " + e.getMessage());
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return false;
     }
-    
-    return topics;
-}
+
+    public int countChildTopics(int parentId) {
+        int count = 0;
+        String query = "SELECT COUNT(*) FROM topics WHERE tpParent = ?";
+
+        try (Connection conn = Connec.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, parentId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return count;
+    }
+
+    public boolean deleteTopic(int idTopic) {
+        String query = "DELETE FROM topics WHERE tpID = ?";
+
+        try (Connection conn = Connec.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, idTopic);
+            int rowsAffected = stmt.executeUpdate();
+
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<TopicsDTO> searchTopics(String keyword) {
+        List<TopicsDTO> topics = new ArrayList<>();
+        String query = "SELECT * FROM topics WHERE tpTitle LIKE ?";
+
+        try (Connection conn = Connec.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, "%" + keyword + "%"); // Tìm kiếm gần đúng
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                TopicsDTO topic = new TopicsDTO(
+                        rs.getInt("tpID"),
+                        rs.getString("tpTitle"),
+                        rs.getInt("tpParent"),
+                        rs.getBoolean("tpStatus")
+                );
+                topics.add(topic);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return topics;
+    }
 
 }

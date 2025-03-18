@@ -4,22 +4,28 @@
  */
 package GUI;
 
+import DTO.UsersDTO;
 import GUI.Manament.AnswersGUI;
 import GUI.Manament.DashBoardGUI;
 import GUI.Manament.TopicsGUI;
 import GUI.Manament.QuestionsGUI;
 import GUI.Manament.TestsGUI;
 import GUI.Manament.ExamsGUI;
+import GUI.Manament.JoinTestGUI;
 import GUI.Manament.LogsGUI;
 import GUI.Manament.ResultsGUI;
 import GUI.Manament.UsersGUI;
+import javax.swing.JButton;
 
 /**
  *
  * @author haun4
  */
-public class IndexGUI extends javax.swing.JFrame {
 
+public class IndexGUI extends javax.swing.JFrame {
+    private UsersDTO user; // Lưu thông tin user
+
+    // Khai báo các GUI khác
     DashBoardGUI a = new DashBoardGUI();
     TopicsGUI b = new TopicsGUI();
     QuestionsGUI c = new QuestionsGUI();
@@ -29,9 +35,17 @@ public class IndexGUI extends javax.swing.JFrame {
     UsersGUI g = new UsersGUI();
     LogsGUI h = new LogsGUI();
     AnswersGUI k = new AnswersGUI();
+    JoinTestGUI l;
+    private javax.swing.JButton[] allButtons; // Mảng chứa tất cả button
     
-    public IndexGUI() {
+    public IndexGUI(UsersDTO user) {
+        this.user = user; // Gán user
+        l = new JoinTestGUI(user);
         initComponents();
+        allButtons = new javax.swing.JButton[]{ 
+            jButton1, jButton2, jButton3, jButton4, jButton5, 
+            jButton6, jButton7, jButton8, jButton9, jButton10 
+        };
         main.add(a);
         main.add(b);
         main.add(c);
@@ -41,6 +55,7 @@ public class IndexGUI extends javax.swing.JFrame {
         main.add(g);
         main.add(h);
         main.add(k);
+        main.add(l);
         a.setVisible(false);
         b.setVisible(false);
         c.setVisible(false);
@@ -50,7 +65,28 @@ public class IndexGUI extends javax.swing.JFrame {
         g.setVisible(false);
         h.setVisible(false);
         k.setVisible(false);
+        l.setVisible(false);
+        
+        // Ẩn tất cả các button trước
+        for (JButton btn : allButtons) {
+            btn.setVisible(false);
+        }
+        jButton11.setVisible(false); // Ẩn luôn jButton11 trước
+        // Kiểm tra quyền user
+        if (user.isAdmin()) {
+            // Admin thấy tất cả button
+            for (JButton btn : allButtons) {
+                btn.setVisible(true);
+            }
+            jButton11.setVisible(true);
+        } else {
+            // Người dùng thường chỉ thấy jButton11
+            jButton11.setVisible(true);
+        }
     }
+            
+        
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -60,6 +96,7 @@ public class IndexGUI extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
@@ -69,14 +106,15 @@ public class IndexGUI extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
+        jButton11 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jButton10 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
         main = new javax.swing.JLayeredPane();
 
@@ -129,18 +167,6 @@ public class IndexGUI extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setBackground(new java.awt.Color(4, 51, 69));
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(245, 245, 245));
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMG/icons8-stack-exchange-50.png"))); // NOI18N
-        jButton2.setText("Topics       ");
-        jButton2.setBorder(null);
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
         jButton3.setBackground(new java.awt.Color(4, 51, 69));
         jButton3.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
         jButton3.setForeground(new java.awt.Color(245, 245, 245));
@@ -177,18 +203,6 @@ public class IndexGUI extends javax.swing.JFrame {
             }
         });
 
-        jButton6.setBackground(new java.awt.Color(4, 51, 69));
-        jButton6.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
-        jButton6.setForeground(new java.awt.Color(245, 245, 245));
-        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMG/icons8-result-50.png"))); // NOI18N
-        jButton6.setText("Results    ");
-        jButton6.setBorder(null);
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
-            }
-        });
-
         jButton7.setBackground(new java.awt.Color(4, 51, 69));
         jButton7.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
         jButton7.setForeground(new java.awt.Color(245, 245, 245));
@@ -201,15 +215,27 @@ public class IndexGUI extends javax.swing.JFrame {
             }
         });
 
-        jButton8.setBackground(new java.awt.Color(4, 51, 69));
-        jButton8.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
-        jButton8.setForeground(new java.awt.Color(245, 245, 245));
-        jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMG/icons8-clock-50.png"))); // NOI18N
-        jButton8.setText("Logs        ");
-        jButton8.setBorder(null);
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
+        jButton11.setBackground(new java.awt.Color(4, 51, 69));
+        jButton11.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
+        jButton11.setForeground(new java.awt.Color(245, 245, 245));
+        jButton11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMG/icons8-answers-50.png"))); // NOI18N
+        jButton11.setText("JoinTest");
+        jButton11.setBorder(null);
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
+                jButton11ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setBackground(new java.awt.Color(4, 51, 69));
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(245, 245, 245));
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMG/icons8-stack-exchange-50.png"))); // NOI18N
+        jButton2.setText("Topics       ");
+        jButton2.setBorder(null);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
             }
         });
 
@@ -225,45 +251,90 @@ public class IndexGUI extends javax.swing.JFrame {
             }
         });
 
+        jButton6.setBackground(new java.awt.Color(4, 51, 69));
+        jButton6.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
+        jButton6.setForeground(new java.awt.Color(245, 245, 245));
+        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMG/icons8-result-50.png"))); // NOI18N
+        jButton6.setText("Results    ");
+        jButton6.setBorder(null);
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
+        jButton8.setBackground(new java.awt.Color(4, 51, 69));
+        jButton8.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
+        jButton8.setForeground(new java.awt.Color(245, 245, 245));
+        jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMG/icons8-clock-50.png"))); // NOI18N
+        jButton8.setText("Logs        ");
+        jButton8.setBorder(null);
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jButton6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton8)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jButton9.setBackground(new java.awt.Color(4, 51, 69));
@@ -275,23 +346,25 @@ public class IndexGUI extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(37, Short.MAX_VALUE))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton9)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(33, 33, 33)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(182, 182, 182)
+                .addComponent(jButton9)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -307,7 +380,7 @@ public class IndexGUI extends javax.swing.JFrame {
                         .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -325,7 +398,7 @@ public class IndexGUI extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 739, Short.MAX_VALUE)
         );
 
         pack();
@@ -342,6 +415,7 @@ public class IndexGUI extends javax.swing.JFrame {
         g.setVisible(false);
         h.setVisible(false);
         k.setVisible(false);
+        l.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -354,6 +428,7 @@ public class IndexGUI extends javax.swing.JFrame {
         g.setVisible(false);
         h.setVisible(false);
         k.setVisible(false);
+        l.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -366,6 +441,7 @@ public class IndexGUI extends javax.swing.JFrame {
         g.setVisible(false);
         h.setVisible(false);
         k.setVisible(false);
+        l.setVisible(false);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -378,6 +454,7 @@ public class IndexGUI extends javax.swing.JFrame {
         g.setVisible(false);
         h.setVisible(false);
         k.setVisible(false);
+        l.setVisible(false);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -390,6 +467,7 @@ public class IndexGUI extends javax.swing.JFrame {
         g.setVisible(false);
         h.setVisible(false);
         k.setVisible(false);
+        l.setVisible(false);
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
@@ -398,10 +476,11 @@ public class IndexGUI extends javax.swing.JFrame {
         c.setVisible(false);
         d.setVisible(false);
         e.setVisible(false);
-        f.setVisible(true);  
+        f.setVisible(true);
         g.setVisible(false);
         h.setVisible(false);
         k.setVisible(false);
+        l.setVisible(false);
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
@@ -410,10 +489,11 @@ public class IndexGUI extends javax.swing.JFrame {
         c.setVisible(false);
         d.setVisible(false);
         e.setVisible(false);
-        f.setVisible(false);  
+        f.setVisible(false);
         g.setVisible(true);
         h.setVisible(false);
         k.setVisible(false);
+        l.setVisible(false);
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
@@ -422,11 +502,25 @@ public class IndexGUI extends javax.swing.JFrame {
         c.setVisible(false);
         d.setVisible(false);
         e.setVisible(false);
-        f.setVisible(false);  
+        f.setVisible(false);
         g.setVisible(false);
         h.setVisible(true);
         k.setVisible(false);
+        l.setVisible(false);
     }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        a.setVisible(false);
+        b.setVisible(false);
+        c.setVisible(false);
+        d.setVisible(false);
+        e.setVisible(false);
+        f.setVisible(false);
+        g.setVisible(false);
+        h.setVisible(false);
+        k.setVisible(false);
+        l.setVisible(true);
+    }//GEN-LAST:event_jButton11ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
         a.setVisible(false);
@@ -434,50 +528,42 @@ public class IndexGUI extends javax.swing.JFrame {
         c.setVisible(false);
         d.setVisible(false);
         e.setVisible(false);
-        f.setVisible(false);  
+        f.setVisible(false);
         g.setVisible(false);
         h.setVisible(false);
         k.setVisible(true);
+        l.setVisible(false);
     }//GEN-LAST:event_jButton10ActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(IndexGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(IndexGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(IndexGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(IndexGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new IndexGUI().setVisible(true);
+    /* Set the Nimbus look and feel */
+    try {
+        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(info.getName())) {
+                javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                break;
             }
-        });
+        }
+    } catch (Exception ex) {
+        java.util.logging.Logger.getLogger(IndexGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     }
+
+    /* Hiển thị màn hình đăng nhập */
+    java.awt.EventQueue.invokeLater(new Runnable() {
+        public void run() {
+            new LoginGUI().setVisible(true); // Mở giao diện đăng nhập trước
+        }
+    });
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
+    private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;

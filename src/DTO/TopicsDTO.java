@@ -1,4 +1,3 @@
-
 package DTO;
 
 /**
@@ -6,6 +5,7 @@ package DTO;
  * @author haun4
  */
 public class TopicsDTO {
+
     private int id;
     private String title;
     private int parentId;
@@ -19,15 +19,35 @@ public class TopicsDTO {
     }
 
     // Getter và Setter
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getId() {
+        return id;
+    }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public int getParentId() { return parentId; }
-    public void setParentId(int parentId) { this.parentId = parentId; }
+    public String getTitle() {
+        return title;
+    }
 
-    public boolean isStatus() { return status; }
-    public void setStatus(boolean status) { this.status = status; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public int getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(int parentId) {
+        this.parentId = parentId;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 }
